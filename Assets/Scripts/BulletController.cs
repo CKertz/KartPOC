@@ -33,4 +33,13 @@ public class BulletController : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Debug.Log("enemy hit");
+            //reduce hp, check if hp 0 and destroy if not
+        }
+    }
 }
