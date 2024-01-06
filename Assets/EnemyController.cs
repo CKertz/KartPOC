@@ -28,4 +28,16 @@ public class EnemyController : MonoBehaviour
             rb.velocity = direction * moveSpeed;
         }
     }
+
+    public void InflictDamage()
+    {
+        enemyHealth -= 1;
+        if (enemyHealth <= 0)
+        {
+            Debug.Log("health is zero:" +  enemyHealth);
+            Destroy(gameObject);
+            return;
+        }
+        Debug.Log("enemy health decremented by 1. now:"+ enemyHealth);
+    }
 }
