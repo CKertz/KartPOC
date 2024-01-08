@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CarController : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
-    float vertical, horizontal;
+    //float vertical, horizontal;
     Rigidbody2D carRigidbody2D;
     [SerializeField]
     float accelerationPower = 5f;
@@ -18,7 +20,6 @@ public class CarController : MonoBehaviour
     void Start()
     {
         carRigidbody2D = GetComponent<Rigidbody2D>();
-
     }
 
 
