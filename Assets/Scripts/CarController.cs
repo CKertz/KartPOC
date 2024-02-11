@@ -6,20 +6,22 @@ using UnityEngine.UI;
 
 public class CarController : MonoBehaviour
 {
-    [SerializeField] float moveSpeed;
-    //float vertical, horizontal;
-    Rigidbody2D carRigidbody2D;
+    [SerializeField] 
+    float moveSpeed;
+
     [SerializeField]
-    float accelerationPower = 5f;
-    [SerializeField]
-    float steeringPower = 5f;
-    float steeringAmount, direction;
+    float accelerationPower;
+
+    private TextMeshProUGUI distanceTraveledText;
+    private Vector3 lastPosition;
+    private float totalDistanceTraveled;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        carRigidbody2D = GetComponent<Rigidbody2D>();
+        lastPosition = transform.position;
     }
 
 
@@ -27,25 +29,40 @@ public class CarController : MonoBehaviour
     void Update()
     {
         Move();
-
+        UpdateDebuggerProperties();
     }
 
     void Move()
     {
-        //this works but gets weighed down with the maskmanager objects piling up, the longer the game, the slower it goes
-        steeringAmount = -Input.GetAxis("Horizontal");
-        moveSpeed = Input.GetAxis("Vertical") * accelerationPower;
-        direction = Mathf.Sign(Vector2.Dot(carRigidbody2D.velocity, carRigidbody2D.GetRelativeVector(Vector2.up)));
-        carRigidbody2D.rotation += steeringAmount * steeringPower * carRigidbody2D.velocity.magnitude * direction;
-        carRigidbody2D.AddRelativeForce(Vector2.up * moveSpeed);
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
 
-        carRigidbody2D.AddRelativeForce(-Vector2.right * carRigidbody2D.velocity.magnitude * steeringAmount / 2);
+        Vector3 movement = new Vector3(horizontalInput, verticalInput, 0f) * moveSpeed * Time.deltaTime;
+
+        transform.Translate(movement);
+
+    }
+
+    private void UpdateDebuggerProperties()
+    {
+        float distanceTraveled = Vector3.Distance(transform.position, lastPosition);
 
 
-        // old, just saving for now
-        //horizontal = Input.GetAxis("Horizontal");
-        //vertical = Input.GetAxis("Vertical");
-        //carRigidbody2D.velocity = new Vector2(horizontal * moveSpeed, vertical * moveSpeed);
-        //
+        totalDistanceTraveled += distanceTraveled;
+
+        lastPosition = transform.position;
+        var debuggerOverlayCanvas = GameObject.Find("DebuggerUICanvas");
+
+        if (debuggerOverlayCanvas != null)
+        {
+            var distanceTraveledObject = debuggerOverlayCanvas.transform.Find("DistanceTraveled");
+            distanceTraveledText = distanceTraveledObject.GetComponent<TextMeshProUGUI>();
+            
+            distanceTraveledText.text = $"Distance traveled: {totalDistanceTraveled}";
+        }
+        else
+        {
+            Debug.LogError("DebuggerUICanvas object not found!");
+        }
     }
 }
