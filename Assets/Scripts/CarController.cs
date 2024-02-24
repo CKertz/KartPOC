@@ -12,27 +12,36 @@ public class CarController : MonoBehaviour
     [SerializeField]
     float accelerationPower;
 
+    [SerializeField]
+    TrailRenderer trailRenderer;
+
     private TextMeshProUGUI distanceTraveledText;
     private Vector3 lastPosition;
     private float totalDistanceTraveled;
 
+    private bool isOnField = false;
+    private bool isTrailEmitting = true;
 
+    private string landingZoneTag = "LandingZone";
 
-    // Start is called before the first frame update
     void Start()
     {
         lastPosition = transform.position;
     }
 
 
-    // Update is called once per frame
     void Update()
     {
         Move();
         UpdateDebuggerProperties();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ToggleHarvester();
+        }
     }
 
-    void Move()
+    private void Move()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
@@ -42,6 +51,42 @@ public class CarController : MonoBehaviour
         transform.Translate(movement);
 
     }
+
+    private void ToggleHarvester()
+    {
+        if (!trailRenderer.emitting)
+        {
+            isTrailEmitting = true;
+            trailRenderer.emitting = true;
+        }
+        else
+        {
+            isTrailEmitting = false;
+            trailRenderer.emitting = false;
+        }
+    }
+
+
+    //TODO: the trail disables when the gun's circle collider collides, need to filter that out eventually
+    //private void OnTriggerExit2D(Collider2D other)
+    //{
+    //    Debug.Log("exiting");
+    //    if(other.gameObject.tag == landingZoneTag)
+    //    {
+    //        gameObject.GetComponent<TrailRenderer>().enabled = true;
+    //    }
+    //}
+
+
+    //private void OnTriggerEnter2D(Collider2D other)
+    //{
+    //    Debug.Log("entering");
+
+    //    if (other.gameObject.tag == landingZoneTag)
+    //    {
+    //        gameObject.GetComponent<TrailRenderer>().enabled = false;
+    //    }
+    //}
 
     private void UpdateDebuggerProperties()
     {
