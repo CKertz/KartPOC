@@ -1074,7 +1074,7 @@ GameObject:
   - component: {fileID: 1465527987}
   - component: {fileID: 1465527986}
   m_Layer: 0
-  m_Name: Mower
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

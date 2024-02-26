@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CarController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] 
     float moveSpeed;
@@ -18,15 +18,24 @@ public class CarController : MonoBehaviour
     private TextMeshProUGUI distanceTraveledText;
     private Vector3 lastPosition;
     private float totalDistanceTraveled;
+    private List<Surface> surfaces = new List<Surface>();
 
     private bool isOnField = false;
-    private bool isTrailEmitting = true;
+    private bool isHarvesting = true;
+    private bool isVehicleMoving = false;
 
     private string landingZoneTag = "LandingZone";
 
     void Start()
     {
         lastPosition = transform.position;
+
+        //TODO: remove temp test surface, just hardcoding one in for now
+        Surface testSurface = new Surface();
+        testSurface.name = "Basic Field";
+        testSurface.isHarvestable = true;
+        testSurface.scoreModifier = 0.1f;
+        surfaces.Add(testSurface);
     }
 
 
@@ -39,6 +48,10 @@ public class CarController : MonoBehaviour
         {
             ToggleHarvester();
         }
+        if (isHarvesting)
+        {
+            UpdateScore();
+        }
     }
 
     private void Move()
@@ -46,6 +59,17 @@ public class CarController : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
+        if(horizontalInput == 0 && verticalInput == 0)
+        {
+            isVehicleMoving = false;
+            Debug.Log("vehiclemoving:" + isVehicleMoving);
+        }
+        else
+        {
+            isVehicleMoving = true;
+            Debug.Log("vehiclemoving:" + isVehicleMoving);
+
+        }
         Vector3 movement = new Vector3(horizontalInput, verticalInput, 0f) * moveSpeed * Time.deltaTime;
 
         transform.Translate(movement);
@@ -56,14 +80,29 @@ public class CarController : MonoBehaviour
     {
         if (!trailRenderer.emitting)
         {
-            isTrailEmitting = true;
+            isHarvesting = true;
             trailRenderer.emitting = true;
         }
         else
         {
-            isTrailEmitting = false;
+            isHarvesting = false;
             trailRenderer.emitting = false;
         }
+    }
+
+    // only called when isHarvesting == true
+    private void UpdateScore()
+    {
+        //check if the surface in contact is a new surface. add to list if so and keep updating while on top of it
+        //use this https://www.youtube.com/watch?v=aPXvoWVabPY to help with surface handling
+
+        //if vehicle is moving and on never touched area -- i think a rendered trail can be set as a layer? 
+        if(isVehicleMoving)
+        {
+            surfaces[0].totalScore += totalDistanceTraveled * surfaces[0].scoreModifier;
+            Debug.Log("total score for "+ surfaces[0].name+ ":"+surfaces[0].totalScore);
+        }
+
     }
 
 
@@ -92,8 +131,10 @@ public class CarController : MonoBehaviour
     {
         float distanceTraveled = Vector3.Distance(transform.position, lastPosition);
 
-
-        totalDistanceTraveled += distanceTraveled;
+        if(isHarvesting)
+        {
+            totalDistanceTraveled += distanceTraveled;
+        }
 
         lastPosition = transform.position;
         var debuggerOverlayCanvas = GameObject.Find("DebuggerUICanvas");
