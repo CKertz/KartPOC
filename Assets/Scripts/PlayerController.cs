@@ -16,15 +16,17 @@ public class PlayerController : MonoBehaviour
     TrailRenderer trailRenderer;
 
     private TextMeshProUGUI distanceTraveledText;
+    private TextMeshProUGUI currentSurfaceText;
+
     private Vector3 lastPosition;
     private float totalDistanceTraveled;
+    private string currentSurface;
+
     private List<Surface> surfaces = new List<Surface>();
 
     private bool isOnField = false;
     private bool isHarvesting = true;
     private bool isVehicleMoving = false;
-
-    private string landingZoneTag = "LandingZone";
 
     void Start()
     {
@@ -52,6 +54,7 @@ public class PlayerController : MonoBehaviour
         {
             UpdateScore();
         }
+
     }
 
     private void Move()
@@ -62,12 +65,12 @@ public class PlayerController : MonoBehaviour
         if(horizontalInput == 0 && verticalInput == 0)
         {
             isVehicleMoving = false;
-            Debug.Log("vehiclemoving:" + isVehicleMoving);
+            //Debug.Log("vehiclemoving:" + isVehicleMoving);
         }
         else
         {
             isVehicleMoving = true;
-            Debug.Log("vehiclemoving:" + isVehicleMoving);
+            //Debug.Log("vehiclemoving:" + isVehicleMoving);
 
         }
         Vector3 movement = new Vector3(horizontalInput, verticalInput, 0f) * moveSpeed * Time.deltaTime;
@@ -100,7 +103,7 @@ public class PlayerController : MonoBehaviour
         if(isVehicleMoving)
         {
             surfaces[0].totalScore += totalDistanceTraveled * surfaces[0].scoreModifier;
-            Debug.Log("total score for "+ surfaces[0].name+ ":"+surfaces[0].totalScore);
+            //Debug.Log("total score for "+ surfaces[0].name+ ":"+surfaces[0].totalScore);
         }
 
     }
@@ -130,7 +133,7 @@ public class PlayerController : MonoBehaviour
     private void UpdateDebuggerProperties()
     {
         float distanceTraveled = Vector3.Distance(transform.position, lastPosition);
-
+        GetCurrentSurface();
         if(isHarvesting)
         {
             totalDistanceTraveled += distanceTraveled;
@@ -143,12 +146,26 @@ public class PlayerController : MonoBehaviour
         {
             var distanceTraveledObject = debuggerOverlayCanvas.transform.Find("DistanceTraveled");
             distanceTraveledText = distanceTraveledObject.GetComponent<TextMeshProUGUI>();
-            
             distanceTraveledText.text = $"Distance traveled: {totalDistanceTraveled}";
+
+            var currentSurfaceObject = debuggerOverlayCanvas.transform.Find("CurrentSurface");
+            currentSurfaceText = currentSurfaceObject.GetComponent<TextMeshProUGUI>();
+            currentSurfaceText.text = $"Current surface: {currentSurface}";
         }
         else
         {
             Debug.LogError("DebuggerUICanvas object not found!");
         }
     }
+
+    private void GetCurrentSurface()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, LayerMask.GetMask("FieldSurface")); // Assuming sprites are on a specific layer
+
+        if (hit.collider != null)
+        {
+            currentSurface = hit.collider.gameObject.tag;
+        }
+    }
+
 }
