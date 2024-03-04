@@ -49,17 +49,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        GetHarvesterEdges();
-        Vector2 currentCell = WorldToCell(transform.position);
-        if (!visitedPositions.Contains(currentCell))
-        {
-            //todo: this will get currentpos of player, but not entire trailrenderer. find a way to get trailrenderer width.
-            // cannot attach a bnoxcollider to trailrenderer. maybe get dimensions of the trail texture? possibly just the x1 and x2
-            // coords because the y can just be 1 pixel tall
-            Debug.Log("Unique position detected at: " + currentCell);
-            visitedPositions.Add(currentCell);
-        }
-
         Move();
         UpdateDebuggerProperties();
 
@@ -67,43 +56,11 @@ public class PlayerController : MonoBehaviour
         {
             ToggleHarvester();
         }
-        if (isHarvesting)
+        if (isHarvesting && isPlayerMoving)
         {
             UpdateScore();
         }
 
-    }
-
-    void GetHarvesterEdges()
-    {
-        // Get the sprite's bounds
-        Bounds spriteBounds = harvestOutlineSprite.bounds;
-
-        // Get the position of the sprite
-        Vector3 spritePosition = harvestOutlineSprite.transform.position;
-
-        // Calculate edges
-        float leftEdge = spritePosition.x - spriteBounds.extents.x;
-        float rightEdge = spritePosition.x + spriteBounds.extents.x;
-        float bottomEdge = spritePosition.y - spriteBounds.extents.y;
-        float topEdge = spritePosition.y + spriteBounds.extents.y;
-
-        // Print or use the edge coordinates
-        Debug.Log("Left Edge: " + leftEdge);
-        Debug.Log("Right Edge: " + rightEdge);
-        Debug.Log("Bottom Edge: " + bottomEdge);
-        Debug.Log("Top Edge: " + topEdge);
-    }
-
-
-    private Vector2 WorldToCell(Vector3 worldPos)
-    {
-        // rounding it to 1 decimal point for now, if more precision is needed it can always be adjusted
-        float x = (float)Math.Round(worldPos.x * cellSize, 1);
-        float y = (float)Math.Round(worldPos.y * cellSize, 1);
-        //Debug.Log("x:" + x+ " Y:"+y);
-
-        return new Vector2(x, y);
     }
 
     private void Move()
@@ -125,6 +82,69 @@ public class PlayerController : MonoBehaviour
 
         transform.Translate(movement);
 
+    }
+
+    private void UpdateScore()
+    {
+        //check if the surface in contact is a new surface. add to list if so and keep updating while on top of it
+        //use this https://www.youtube.com/watch?v=aPXvoWVabPY to help with surface handling
+
+        List<Vector2> currentCellsCovered = GetCurrentHarvesterCoveredPositions();
+        
+        foreach (Vector2 cell in currentCellsCovered)
+        {
+            Debug.Log("scanning cell with coords:" + cell.x + "," + cell.y);
+            if (!visitedPositions.Contains(cell))
+            {
+                visitedPositions.Add(cell);
+            }
+        }
+        //surfaces[0].totalScore += totalDistanceTraveled * surfaces[0].scoreModifier;
+    }
+
+    private List<Vector2> GetCurrentHarvesterCoveredPositions()
+    {
+        List<Vector2> edgeCoordinates = new List<Vector2>();
+
+        // Get the sprite's bounds
+        Bounds spriteBounds = harvestOutlineSprite.bounds;
+
+        // Get the position of the sprite
+        Vector3 spritePosition = harvestOutlineSprite.transform.position;
+
+        // Calculate edges
+        
+        float leftEdge = (float)Math.Round(spritePosition.x - spriteBounds.extents.x, 1);
+        float rightEdge = (float)Math.Round(spritePosition.x + spriteBounds.extents.x, 1);
+        float bottomEdge = (float)Math.Round(spritePosition.y - spriteBounds.extents.y, 1);
+        float topEdge = (float)Math.Round(spritePosition.y + spriteBounds.extents.y, 1);
+
+        // Print or use the edge coordinates
+        //Debug.Log("Left Edge: " + leftEdge);
+        //Debug.Log("Right Edge: " + rightEdge);
+        //Debug.Log("Bottom Edge: " + bottomEdge);
+        //Debug.Log("Top Edge: " + topEdge);
+
+        for (float x = leftEdge; x <= rightEdge; x++)
+        {
+            // Calculate corresponding y-coordinate for each x-coordinate
+            float y = spritePosition.y + (spriteBounds.extents.y * Mathf.Sin(Mathf.Acos((x - spritePosition.x) / spriteBounds.extents.x)));
+            edgeCoordinates.Add(new Vector2(x, y));
+        }
+
+        return edgeCoordinates;
+
+    }
+
+
+    private Vector2 WorldToCell(Vector2 worldPos)
+    {
+        // rounding it to 1 decimal point for now, if more precision is needed it can always be adjusted
+        float x = (float)Math.Round(worldPos.x * cellSize, 1);
+        float y = (float)Math.Round(worldPos.y * cellSize, 1);
+        //Debug.Log("x:" + x+ " Y:"+y);
+
+        return new Vector2(x, y);
     }
 
     private void UpdateHarvesterRotation(float horizontalInput, float verticalInput)
@@ -152,21 +172,6 @@ public class PlayerController : MonoBehaviour
             isHarvesting = false;
             trailRenderer.emitting = false;
         }
-    }
-
-    // only called when isHarvesting == true
-    private void UpdateScore()
-    {
-        //check if the surface in contact is a new surface. add to list if so and keep updating while on top of it
-        //use this https://www.youtube.com/watch?v=aPXvoWVabPY to help with surface handling
-
-        //if vehicle is moving and on never touched area -- i think a rendered trail can be set as a layer? 
-        if(isPlayerMoving)
-        {
-            surfaces[0].totalScore += totalDistanceTraveled * surfaces[0].scoreModifier;
-            //Debug.Log("total score for "+ surfaces[0].name+ ":"+surfaces[0].totalScore);
-        }
-
     }
 
 
