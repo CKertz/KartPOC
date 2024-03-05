@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
         }
         if (isHarvesting && isPlayerMoving)
         {
-            UpdateScore();
+            //UpdateScore();
         }
 
     }
