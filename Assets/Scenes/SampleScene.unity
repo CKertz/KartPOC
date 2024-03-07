@@ -1214,6 +1214,7 @@ GameObject:
   - component: {fileID: 1430395743}
   - component: {fileID: 1430395744}
   - component: {fileID: 1430395745}
+  - component: {fileID: 1430395746}
   m_Layer: 0
   m_Name: Trail
   m_TagString: Untagged
@@ -1347,6 +1348,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14b3a62bd575204bacf1be0354d1b46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1430395746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1430395742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0f1f0d7bb581d044bd860990d5786c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: d49cab351f98dab44a1ef6fe2d1d97ac, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1430395745}
+        m_TargetAssemblyTypeName: TrailRendererController, Assembly-CSharp
+        m_MethodName: ToggleTrailrendererPoints
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1465527985
 GameObject:
   m_ObjectHideFlags: 0
@@ -1404,7 +1433,7 @@ MonoBehaviour:
   accelerationPower: 3
   trailRenderer: {fileID: 1430395744}
   harvestOutlineSprite: {fileID: 136011518}
-  cellSize: 1
+  onPlayerHarvesterChanged: {fileID: 11400000, guid: d49cab351f98dab44a1ef6fe2d1d97ac, type: 2}
 --- !u!61 &1465527988
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -19,6 +19,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     SpriteRenderer harvestOutlineSprite;
 
+    [Header("Events")]
+    public GameEvent onPlayerHarvesterChanged;
+
     private TextMeshProUGUI distanceTraveledText;
     private TextMeshProUGUI currentSurfaceText;
 
@@ -31,9 +34,6 @@ public class PlayerController : MonoBehaviour
     private bool isOnField = false;
     private bool isHarvesting = true;
     private bool isPlayerMoving = false;
-
-    public float cellSize = 0.5f; 
-    private HashSet<Vector2> visitedPositions = new HashSet<Vector2>();
 
     void Start()
     {
@@ -117,6 +117,7 @@ public class PlayerController : MonoBehaviour
             isHarvesting = false;
             trailRenderer.emitting = false;
         }
+        onPlayerHarvesterChanged.Raise(this, trailRenderer);
     }
 
 
