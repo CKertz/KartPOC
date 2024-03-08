@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     private List<Surface> surfaces = new List<Surface>();
 
     private bool isOnField = false;
-    private bool isHarvesting = true;
+    private bool isHarvesting = false;
     private bool isPlayerMoving = false;
 
     void Start()

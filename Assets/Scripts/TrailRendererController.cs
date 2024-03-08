@@ -5,12 +5,14 @@ using UnityEngine;
 
 public class TrailRendererController : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject trailColliderPrefab;
     TrailRenderer trail;
     EdgeCollider2D edgeCollider;
-    bool isTrailPointSetting = true;
+    bool isTrailPointSetting = false;
     private int trailOffsetNumber = 0;
     private int trailOffsetEndNumber = 0;
-    List<List<Vector2>> removalPointsTracker = new List<List<Vector2>>();
+    List<List<Vector2>> pointTracker = new List<List<Vector2>>();
 
     void Start()
     {
@@ -24,7 +26,6 @@ public class TrailRendererController : MonoBehaviour
         {
             SetColliderPointsFromTrail(trail, edgeCollider);
         }
-        Debug.Log(trail.positionCount);
     }
 
     private void SetColliderPointsFromTrail(TrailRenderer trailRenderer, EdgeCollider2D collider)
@@ -41,13 +42,36 @@ public class TrailRendererController : MonoBehaviour
         collider.SetPoints(points);
     }
 
-    private void RemoveColliderPointsForInvisibleTrail(TrailRenderer trailRenderer)
+    private void CreateColliderPointSegment(TrailRenderer trailRenderer)
     {
-        //trailoffsetnumber - trailoffsetendnumber = the points needed to be removed.
-        //each time the toggle happens, need to add a new list of these poitns to master list, and when toggled
-        //back on, iterate over master list and remove each chunk of points
+        List<Vector2> segment = new List<Vector2>();
+        for (int i = trailOffsetEndNumber; i < trailRenderer.positionCount; i++)
+        {
+            segment.Add(trailRenderer.GetPosition(i));
+        }
+        pointTracker.Add(segment);
+        Debug.Log(string.Format("segment from points {0} to {1} added. pointtracker count: {2}", trailOffsetEndNumber, trailRenderer.positionCount, pointTracker.Count));
+    }
 
-        //..can you remove a subset of points?
+    private void BuildColliderPointsFromPointTracker(EdgeCollider2D collider)
+    {
+        if(pointTracker.Count <= 0)
+        {
+            Debug.Log("pointtracker count = 0");
+            return;
+        }
+        GameObject newObject = Instantiate(trailColliderPrefab);
+        //GameObject newEdgeColliderObject = new GameObject("EdgeColliderObject");
+        //EdgeCollider2D newEdgeCollider = newEdgeColliderObject.AddComponent<EdgeCollider2D>();
+        //newEdgeCollider.edgeRadius = 0.5f;
+        //newEdgeCollider.isTrigger = true;
+
+        foreach (List<Vector2> segment in pointTracker)
+        {
+            newObject.GetComponent<EdgeCollider2D>().SetPoints(segment);
+
+            //newEdgeCollider.SetPoints(segment);
+        }
     }
 
     public void ToggleTrailrendererPoints(Component sender, object data)
@@ -59,11 +83,14 @@ public class TrailRendererController : MonoBehaviour
             {
                 isTrailPointSetting = true;
                 trailOffsetEndNumber = trail.positionCount;
+                BuildColliderPointsFromPointTracker(edgeCollider);
             }
             else
             {
                 isTrailPointSetting = false;
                 trailOffsetNumber = trail.positionCount;
+                // form a segment in master list
+                CreateColliderPointSegment(trail);
                 Debug.Log("OFFSET NUMBER:" +trailOffsetNumber);
 
             }
