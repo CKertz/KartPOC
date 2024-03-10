@@ -17,7 +17,15 @@ public class TrailColliderController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("collision entered by " + collision.name);
+        if (gameObject.name == "TrailCollider") // && !trailrenderer.emitting .. set up eventlistener?
+        {
+            Debug.Log("trailcollider collision, this is OK");
+        }
+        else
+        {
+            Debug.Log("NOT OK");
+        }
+        
     }
 
     private void OnTriggerExit2D(Collider2D collision)

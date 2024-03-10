@@ -33,9 +33,9 @@ public class TrailRendererController : MonoBehaviour
         List<Vector2> points = new List<Vector2>();
         
         // trims the top of the trailrenderer from creating collider points ahead of the trail. introducing an offset to cut off the top
-        int pointOffsetNumber = 7;
+        int pointOffsetNumber = 4;
         
-        for(int i = trailOffsetEndNumber; i < trailRenderer.positionCount - pointOffsetNumber; i++)
+        for(int i = trailOffsetEndNumber + pointOffsetNumber; i < trailRenderer.positionCount - pointOffsetNumber; i++)
         {
             points.Add(trailRenderer.GetPosition(i));
         }
@@ -45,7 +45,8 @@ public class TrailRendererController : MonoBehaviour
     private void CreateColliderPointSegment(TrailRenderer trailRenderer)
     {
         List<Vector2> segment = new List<Vector2>();
-        for (int i = trailOffsetEndNumber; i < trailRenderer.positionCount; i++)
+        int pointOffsetNumber = 4;
+        for (int i = trailOffsetEndNumber + pointOffsetNumber; i < trailRenderer.positionCount - pointOffsetNumber; i++)
         {
             segment.Add(trailRenderer.GetPosition(i));
         }
@@ -61,10 +62,6 @@ public class TrailRendererController : MonoBehaviour
             return;
         }
         GameObject newObject = Instantiate(trailColliderPrefab);
-        //GameObject newEdgeColliderObject = new GameObject("EdgeColliderObject");
-        //EdgeCollider2D newEdgeCollider = newEdgeColliderObject.AddComponent<EdgeCollider2D>();
-        //newEdgeCollider.edgeRadius = 0.5f;
-        //newEdgeCollider.isTrigger = true;
 
         foreach (List<Vector2> segment in pointTracker)
         {
