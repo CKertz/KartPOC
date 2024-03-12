@@ -77,6 +77,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             isPlayerMoving = true;
+            UpdateScore();
         }
         Vector3 movement = new Vector3(horizontalInput, verticalInput, 0f) * moveSpeed * Time.deltaTime;
 
@@ -90,6 +91,11 @@ public class PlayerController : MonoBehaviour
         //use this https://www.youtube.com/watch?v=aPXvoWVabPY to help with surface handling
         
         //surfaces[0].totalScore += totalDistanceTraveled * surfaces[0].scoreModifier;
+        var currentSurface = GetCurrentSurface();
+        if (currentSurface != null)
+        {
+
+        }
     }
 
     private void UpdateHarvesterRotation(float horizontalInput, float verticalInput)
@@ -120,6 +126,19 @@ public class PlayerController : MonoBehaviour
         onPlayerHarvesterChanged.Raise(this, trailRenderer);
     }
 
+    public void HandleTrailColliderEnter()
+    {
+        Debug.Log("trail hit, playercontroller notified");
+        currentSurface = "Trail"; // TODO:remove hardcoding, make a trail surface. also ignore if trail is being hit when collider.name == trailcollider?
+        Debug.Log("currentsurface:" + currentSurface);
+    }
+
+    public void HandleTrailColliderExit()
+    {
+        Debug.Log("trail exited, playercontroller notified");
+        currentSurface = GetCurrentSurface();
+        Debug.Log("currentsurface:" + currentSurface);
+    }
 
     //TODO: the trail disables when the gun's circle collider collides, need to filter that out eventually
     //private void OnTriggerExit2D(Collider2D other)
@@ -170,14 +189,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void GetCurrentSurface()
+    private string GetCurrentSurface()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, LayerMask.GetMask("FieldSurface")); // Assuming sprites are on a specific layer
 
         if (hit.collider != null)
         {
             currentSurface = hit.collider.gameObject.tag;
+            //Debug.Log(currentSurface);
+            return currentSurface;
         }
+        return null;
     }
 
 }
