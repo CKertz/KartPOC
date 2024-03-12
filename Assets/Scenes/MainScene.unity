@@ -1686,7 +1686,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e896b2aa706bdb34eb138583ee7dda79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
+  moveSpeed: 5
   accelerationPower: 5
   trailRenderer: {fileID: 1430395744}
   harvestOutlineSprite: {fileID: 0}
