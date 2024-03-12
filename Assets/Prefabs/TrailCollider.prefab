@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8590969168549975910}
   - component: {fileID: 8590969168549975833}
-  - component: {fileID: 8590969168549975832}
-  - component: {fileID: -4695728673751392643}
+  - component: {fileID: 6234922604429302258}
+  - component: {fileID: 302106919669107144}
   m_Layer: 0
   m_Name: TrailCollider
   m_TagString: Untagged
@@ -56,7 +56,7 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
---- !u!114 &8590969168549975832
+--- !u!114 &6234922604429302258
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -65,10 +65,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8590969168549975911}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2ac3885a29bf7a4881cb4f58cacc1f9, type: 3}
+  m_Script: {fileID: 11500000, guid: db4e4e57e51add746a4757b603c2fce4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-4695728673751392643
+  onTrailEntered: {fileID: 11400000, guid: 90f4c9cc64e51b3489dc9a248b1610a0, type: 2}
+  onTrailExited: {fileID: 11400000, guid: d87ee6354a81d9a488e1bbbb92526546, type: 2}
+--- !u!114 &302106919669107144
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -77,10 +79,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 8590969168549975911}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0f1f0d7bb581d044bd860990d5786c8, type: 3}
+  m_Script: {fileID: 11500000, guid: c989ede6e4827dc4e9a1d35686a28d85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gameEvent: {fileID: 11400000, guid: d49cab351f98dab44a1ef6fe2d1d97ac, type: 2}
   response:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6234922604429302258}
+        m_TargetAssemblyTypeName: TrailColliderController, Assembly-CSharp
+        m_MethodName: SetTrailEmitterFlag
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

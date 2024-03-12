@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        UpdateHarvesterRotation(horizontalInput, verticalInput);
+        //UpdateHarvesterRotation(horizontalInput, verticalInput);
 
         if (horizontalInput == 0 && verticalInput == 0)
         {
