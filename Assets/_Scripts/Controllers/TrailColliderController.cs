@@ -23,11 +23,11 @@ public class TrailColliderController : MonoBehaviour
     {
         if (gameObject.name == "TrailCollider" && !isTrailEmitting) 
         {
-            Debug.Log("trailcollider collision, this is OK");
+        //    Debug.Log("trailcollider collision, this is OK");
         }
         else
         {
-            Debug.Log("NOT OK");
+        //    Debug.Log("NOT OK");
         }
         onTrailEntered.Raise(this, "");
 
@@ -35,8 +35,8 @@ public class TrailColliderController : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log("collision exited by " + collision.name);
-        onTrailExited.Raise(this, "");
+        //Debug.Log("collision exited by " + collision.name);
+        onTrailExited.Raise(this, collision);
     }
 
     public void SetTrailEmitterFlag(Component sender, object data)

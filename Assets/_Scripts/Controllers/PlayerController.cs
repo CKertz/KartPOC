@@ -16,11 +16,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     TrailRenderer trailRenderer;
 
-    [SerializeField]
-    SpriteRenderer harvestOutlineSprite;
-
     [Header("Events")]
     public GameEvent onPlayerHarvesterChanged;
+    public GameEvent onSurfaceChanged;
 
     private TextMeshProUGUI distanceTraveledText;
     private TextMeshProUGUI currentSurfaceText;
@@ -98,19 +96,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void UpdateHarvesterRotation(float horizontalInput, float verticalInput)
-    {
-        Vector3 movement = new Vector3(horizontalInput, verticalInput, 0f).normalized * moveSpeed * Time.deltaTime;
-        transform.position += movement;
-
-        float angle = Mathf.Atan2(verticalInput, horizontalInput) * Mathf.Rad2Deg;
-
-        if (horizontalInput != 0 || verticalInput != 0)
-        {
-            harvestOutlineSprite.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle - 90f));
-        }
-    }
-
     private void ToggleHarvester()
     {
         if (!trailRenderer.emitting)
@@ -124,20 +109,6 @@ public class PlayerController : MonoBehaviour
             trailRenderer.emitting = false;
         }
         onPlayerHarvesterChanged.Raise(this, trailRenderer);
-    }
-
-    public void HandleTrailColliderEnter()
-    {
-        Debug.Log("trail hit, playercontroller notified");
-        currentSurface = "Trail"; // TODO:remove hardcoding, make a trail surface. also ignore if trail is being hit when collider.name == trailcollider?
-        Debug.Log("currentsurface:" + currentSurface);
-    }
-
-    public void HandleTrailColliderExit()
-    {
-        Debug.Log("trail exited, playercontroller notified");
-        currentSurface = GetCurrentSurface();
-        Debug.Log("currentsurface:" + currentSurface);
     }
 
     //TODO: the trail disables when the gun's circle collider collides, need to filter that out eventually
@@ -195,8 +166,11 @@ public class PlayerController : MonoBehaviour
 
         if (hit.collider != null)
         {
+            if(currentSurface != hit.collider.gameObject.tag && currentSurface != null)
+            {
+                onSurfaceChanged.Raise(this, currentSurface);
+            }
             currentSurface = hit.collider.gameObject.tag;
-            //Debug.Log(currentSurface);
             return currentSurface;
         }
         return null;
