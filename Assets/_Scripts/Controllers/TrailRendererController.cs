@@ -35,7 +35,7 @@ public class TrailRendererController : MonoBehaviour
         // trims the top of the trailrenderer from creating collider points ahead of the trail. introducing an offset to cut off the top
         int pointOffsetNumber = 4;
         
-        for(int i = trailOffsetEndNumber + pointOffsetNumber; i < trailRenderer.positionCount - pointOffsetNumber; i++)
+        for(int i = trailOffsetEndNumber + pointOffsetNumber; i < trailRenderer.positionCount - (pointOffsetNumber*2); i++)
         {
             points.Add(trailRenderer.GetPosition(i));
         }
@@ -95,5 +95,21 @@ public class TrailRendererController : MonoBehaviour
 
         }
         //Debug.Log("test hit!" + data + "another test:"+ sender.gameObject.name);
+    }
+
+    public void FillInRecentTrailBufferZone(Component sender, object data)
+    {   //TODO: 
+        // the most recent trail formed by player has a buffer on the edgecollider points being set in order to avoid disrupting status
+        // of surface driven on. idea is calling this as a GameEventListener for when harvester is turned off to fill in the buffer zone
+        // 
+        if (data is TrailRenderer)
+        {
+            var trail = (TrailRenderer) data;
+            if (!trail.emitting)
+            {
+                // ...
+            }
+        }
+
     }
 }

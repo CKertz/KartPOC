@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     private bool isTrailEmitting = false;
     private bool isTrailColliding = false;
     private List<Surface> surfaces = new List<Surface>();
+    private string currentSurface;
 
     void Start()
     {
@@ -36,24 +37,47 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SetTrailCollidingFlag(Component sender, object data)
+    public void SetTrailCollidingFlagEnter(Component sender, object data)
     {
-        Debug.Log("gamemanagercollision hit:" + sender.name);
-        if (data is Collider2D)
-        {
-            var collision = (Collider2D) data;
+        isTrailColliding = true;
+        currentSurface = "Trail";
+        Debug.Log("istrailColliding =:" + isTrailColliding);
+        Debug.Log("currentsurface: " + currentSurface);
+    }
 
-            Debug.Log("gamemanager collision:" + collision.name);
-        }
+    public void SetTrailCollidingFlagExit(Component sender, object data)
+    {
+        isTrailColliding = false;
+        Debug.Log("istrailColliding =:" + isTrailColliding);
+        Debug.Log("currentsurface: " + currentSurface);
     }
 
     public void HandleSurface(Component sender, object data)
     {
         if(data is string)
         {
-            var surface = (string) data;
-            Debug.Log("handle surface:" + surface);
-
+            if(!isTrailColliding)
+            {
+                currentSurface = (string) data;
+                Debug.Log("currentsurface:" + currentSurface);
+            }
+            else
+            {
+                currentSurface = "Trail";
+            }
         }
+        Debug.Log("currentSurface in gameManager: " + currentSurface);
+    }
+
+    private bool CalculateScoreStatus()
+    {
+        //TODO: algorithm for determining if ok to update score
+        bool scoreStatus = false;
+        if(!isTrailEmitting)
+        {
+            return scoreStatus;
+        }
+
+        return scoreStatus;
     }
 }

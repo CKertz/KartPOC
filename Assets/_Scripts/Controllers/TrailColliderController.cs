@@ -29,7 +29,7 @@ public class TrailColliderController : MonoBehaviour
         {
         //    Debug.Log("NOT OK");
         }
-        onTrailEntered.Raise(this, "");
+        onTrailEntered.Raise(this, collision);
 
     }
 

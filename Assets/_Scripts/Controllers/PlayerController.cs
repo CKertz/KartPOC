@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
     {
         //check if the surface in contact is a new surface. add to list if so and keep updating while on top of it
         //use this https://www.youtube.com/watch?v=aPXvoWVabPY to help with surface handling
-        
+
         //surfaces[0].totalScore += totalDistanceTraveled * surfaces[0].scoreModifier;
         var currentSurface = GetCurrentSurface();
         if (currentSurface != null)
@@ -152,7 +152,9 @@ public class PlayerController : MonoBehaviour
 
             var currentSurfaceObject = debuggerOverlayCanvas.transform.Find("CurrentSurface");
             currentSurfaceText = currentSurfaceObject.GetComponent<TextMeshProUGUI>();
-            currentSurfaceText.text = $"Current surface: {currentSurface}";
+            //currentSurfaceText.text = $"Current surface: {currentSurface}";
+            currentSurfaceText.text = "Broken for now, add events for this";
+
         }
         else
         {
@@ -166,14 +168,24 @@ public class PlayerController : MonoBehaviour
 
         if (hit.collider != null)
         {
-            if(currentSurface != hit.collider.gameObject.tag && currentSurface != null)
+            if(currentSurface != hit.collider.gameObject.tag)
             {
+                currentSurface = hit.collider.gameObject.tag;
                 onSurfaceChanged.Raise(this, currentSurface);
             }
-            currentSurface = hit.collider.gameObject.tag;
             return currentSurface;
         }
         return null;
     }
 
+    public void GetCurrentSurfaceAfterTrailExit(Component sender, object data)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, Mathf.Infinity, LayerMask.GetMask("FieldSurface")); // Assuming sprites are on a specific layer
+
+        if (hit.collider != null)
+        {
+            currentSurface = hit.collider.gameObject.tag;
+            onSurfaceChanged.Raise(this, currentSurface);
+        }
+    }
 }
