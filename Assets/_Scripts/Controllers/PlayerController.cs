@@ -27,8 +27,6 @@ public class PlayerController : MonoBehaviour
     private float totalDistanceTraveled;
     private string currentSurface;
 
-    private List<Surface> surfaces = new List<Surface>();
-
     private bool isOnField = false;
     private bool isHarvesting = false;
     private bool isPlayerMoving = false;
@@ -36,13 +34,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         lastPosition = transform.position;
-
-        //TODO: remove temp test surface, just hardcoding one in for now
-        Surface testSurface = new Surface();
-        testSurface.name = "Basic Field";
-        testSurface.isHarvestable = true;
-        testSurface.scoreModifier = 0.1f;
-        surfaces.Add(testSurface);
     }
 
     void Update()
@@ -88,7 +79,6 @@ public class PlayerController : MonoBehaviour
         //check if the surface in contact is a new surface. add to list if so and keep updating while on top of it
         //use this https://www.youtube.com/watch?v=aPXvoWVabPY to help with surface handling
 
-        //surfaces[0].totalScore += totalDistanceTraveled * surfaces[0].scoreModifier;
         var currentSurface = GetCurrentSurface();
         if (currentSurface != null)
         {

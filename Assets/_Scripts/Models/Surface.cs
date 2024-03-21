@@ -1,15 +1,18 @@
 using System;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "Surface")]
 public class Surface : ScriptableObject
 {
     public bool isHarvestable;
     public float scoreModifier;
     public string surfaceName;
-    public float totalScore = 0;
+    private float totalScore = 0;
     enum surfaceType
     {
-        Field,
-
+        EmptyField,
+        LandingZone,
+        CropA,
+        CropB
     }
 }

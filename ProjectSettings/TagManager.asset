@@ -9,6 +9,7 @@ TagManager:
   - LandingZone
   - Grass
   - Trail
+  - Dirt
   layers:
   - Default
   - TransparentFX

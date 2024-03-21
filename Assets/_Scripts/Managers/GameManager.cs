@@ -65,8 +65,29 @@ public class GameManager : MonoBehaviour
             {
                 currentSurface = "Trail";
             }
+            UpdateSurfaceList();
         }
         Debug.Log("currentSurface in gameManager: " + currentSurface);
+    }
+
+    private void UpdateSurfaceList()
+    {
+        bool isUnique = true;
+        foreach(var surface in surfaces)
+        {
+            if(surface.name == currentSurface)
+            {
+                isUnique = false;
+            }
+        }
+        if(isUnique)
+        {
+            Surface newSurface = new Surface();
+            newSurface.name = currentSurface;
+
+            surfaces.Add(newSurface);
+            Debug.Log("new surface added:" +  newSurface.name);
+        }
     }
 
     private bool CalculateScoreStatus()
