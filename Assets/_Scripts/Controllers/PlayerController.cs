@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour
     private float totalDistanceTraveled;
     private string currentSurface;
 
-    private bool isOnField = false;
     private bool isHarvesting = false;
     private bool isPlayerMoving = false;
 

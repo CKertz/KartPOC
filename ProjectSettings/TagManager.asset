@@ -10,6 +10,7 @@ TagManager:
   - Grass
   - Trail
   - Dirt
+  - Door
   layers:
   - Default
   - TransparentFX

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class DoorController : MonoBehaviour
 {
+    [Header("Events")]
+    public GameEvent onPlayerEnterDoor;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +24,7 @@ public class DoorController : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             Debug.Log("player entered door " + gameObject.name);
+            onPlayerEnterDoor.Raise(this, gameObject);
             //trigger entering another room, blacking out current room, realign camera
         }
     }
