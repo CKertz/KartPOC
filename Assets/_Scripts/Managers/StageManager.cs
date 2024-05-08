@@ -84,7 +84,7 @@ public class StageManager : MonoBehaviour
 
                 }
             }
-            //TODO: add tracking in currentSpawnedRoomCoordinates
+            //TODO: extract this junk out to method
         }
     }
 
