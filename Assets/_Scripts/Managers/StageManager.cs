@@ -24,7 +24,6 @@ public class StageManager : MonoBehaviour
         {
             currentRoomCount++;
 
-            Vector2 newFloorCoords = Vector2.zero;
             string desiredDirection = "";
             if (data is GameObject)
             {
@@ -48,7 +47,8 @@ public class StageManager : MonoBehaviour
                         Debug.Log("spawnWorldPosition is on grid point: (" + spawnWorldPositionNorth.x + ", " + spawnWorldPositionNorth.y + ")");
 
                         //spawn new floor, set parent
-                        Instantiate(emptyFloorPrefab, spawnWorldPositionNorth, Quaternion.identity, stageGrid.transform);                      
+                        Instantiate(emptyFloorPrefab, spawnWorldPositionNorth, Quaternion.identity, stageGrid.transform);
+                        currentSpawnedRoomCoordinates.Add((spawnPositionNorth.x, spawnPositionNorth.y));
                         break;
                     case "South":
                         Vector3Int spawnPositionSouth = doorGridPosition + new Vector3Int(0, -1);
@@ -58,6 +58,8 @@ public class StageManager : MonoBehaviour
                         Debug.Log("spawnWorldPosition is on grid point: (" + spawnWorldPositionSouth.x + ", " + spawnWorldPositionSouth.y + ")");
 
                         Instantiate(emptyFloorPrefab, spawnWorldPositionSouth, Quaternion.identity, stageGrid.transform);
+                        currentSpawnedRoomCoordinates.Add((spawnPositionSouth.x, spawnPositionSouth.y));
+
                         break;
                     case "East":
                         Vector3Int spawnPositionEast = doorGridPosition + new Vector3Int(1, 0);
@@ -67,6 +69,7 @@ public class StageManager : MonoBehaviour
                         Debug.Log("spawnWorldPosition is on grid point: (" + spawnWorldPositionEast.x + ", " + spawnWorldPositionEast.y + ")");
 
                         Instantiate(emptyFloorPrefab, spawnWorldPositionEast, Quaternion.identity, stageGrid.transform);
+                        currentSpawnedRoomCoordinates.Add((spawnPositionEast.x, spawnPositionEast.y));
                         break;
                     case "West":
                         Vector3Int spawnPositionWest = doorGridPosition + new Vector3Int(-1, 0);
@@ -76,6 +79,7 @@ public class StageManager : MonoBehaviour
                         Debug.Log("spawnWorldPosition is on grid point: (" + spawnWorldPositionWest.x + ", " + spawnWorldPositionWest.y + ")");
 
                         Instantiate(emptyFloorPrefab, spawnWorldPositionWest, Quaternion.identity, stageGrid.transform);
+                        currentSpawnedRoomCoordinates.Add((spawnPositionWest.x, spawnPositionWest.y));
                         break;
 
                 }
