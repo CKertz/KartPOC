@@ -13,10 +13,11 @@ public class StageManager : MonoBehaviour
     [SerializeField]
     GameObject emptyFloorPrefab;
 
+    [SerializeField]
+    Grid stageGrid;
+
     public void GenerateNextRoomLayout(Component sender, object data)
     {
-        Debug.Log("GenerateNextRoomLayout called");
-        Debug.Log("test hit!" + data + "another test:" + sender.gameObject.name);
         // who cares about a grid, just generate a completely blank room. determine the door to spawn in it that you walked through, then randomly spawn other doors to pick from
         // note: need to spawn at least one door. no dead ends unless you're at max count
         if (currentRoomCount < maxRoomCount)
@@ -24,13 +25,6 @@ public class StageManager : MonoBehaviour
             currentRoomCount++;
 
             Vector2 newFloorCoords = Vector2.zero;
-            // use direction to help determine where to place empty floor position
-            /*from 0,0:
-
-            room height 2.25 top -2.25 bot
-            room width -4 left 4 right
-
-             */
             string desiredDirection = "";
             if (data is GameObject)
             {
@@ -38,30 +32,54 @@ public class StageManager : MonoBehaviour
                 desiredDirection = ParseDoorNameForDesiredDirection(doorGameObject.name);
                 Debug.Log($"desired direction: {desiredDirection}");
 
+                //origin point is at 4,2.25f currently, so need to add this to the spawn position to fix rooms spawning off of the grid
+                Vector3 gridOffset = new Vector3(4, 2.25f);
+                //convert turn the world coords of door being entered into grid coords
+                Vector3Int doorGridPosition = stageGrid.WorldToCell(doorGameObject.transform.position);
+                Debug.Log("door is on grid point: (" + doorGridPosition.x + ", " + doorGridPosition.y + ")");
+
                 switch (desiredDirection)
                 {
                     case "North":
-                        newFloorCoords.x = doorGameObject.transform.position.x;
-                        newFloorCoords.y = doorGameObject.transform.position.y + 2.25f;
-                    break;
+                        //use those coords and depending on direction, determine the direction to spawn new room
+                        Vector3Int spawnPositionNorth = doorGridPosition + new Vector3Int(0, 1);
+                        Debug.Log("spawnPosition is on grid point: (" + spawnPositionNorth.x + ", " + spawnPositionNorth.y + ")");
+                        Vector3 spawnWorldPositionNorth = stageGrid.CellToWorld(spawnPositionNorth) + gridOffset; 
+                        Debug.Log("spawnWorldPosition is on grid point: (" + spawnWorldPositionNorth.x + ", " + spawnWorldPositionNorth.y + ")");
+
+                        //spawn new floor, set parent
+                        Instantiate(emptyFloorPrefab, spawnWorldPositionNorth, Quaternion.identity, stageGrid.transform);                      
+                        break;
                     case "South":
-                        newFloorCoords.x = doorGameObject.transform.position.x;
-                        newFloorCoords.y = doorGameObject.transform.position.y - 2.25f;
+                        Vector3Int spawnPositionSouth = doorGridPosition + new Vector3Int(0, -1);
+                        Debug.Log("spawnPosition is on grid point: (" + spawnPositionSouth.x + ", " + spawnPositionSouth.y + ")");
+
+                        Vector3 spawnWorldPositionSouth = stageGrid.CellToWorld(spawnPositionSouth) + gridOffset; 
+                        Debug.Log("spawnWorldPosition is on grid point: (" + spawnWorldPositionSouth.x + ", " + spawnWorldPositionSouth.y + ")");
+
+                        Instantiate(emptyFloorPrefab, spawnWorldPositionSouth, Quaternion.identity, stageGrid.transform);
                         break;
                     case "East":
-                        newFloorCoords.x = doorGameObject.transform.position.x + 4f;
-                        newFloorCoords.y = doorGameObject.transform.position.y;
+                        Vector3Int spawnPositionEast = doorGridPosition + new Vector3Int(1, 0);
+                        Debug.Log("spawnPosition is on grid point: (" + spawnPositionEast.x + ", " + spawnPositionEast.y + ")");
+
+                        Vector3 spawnWorldPositionEast = stageGrid.CellToWorld(spawnPositionEast) + gridOffset; 
+                        Debug.Log("spawnWorldPosition is on grid point: (" + spawnWorldPositionEast.x + ", " + spawnWorldPositionEast.y + ")");
+
+                        Instantiate(emptyFloorPrefab, spawnWorldPositionEast, Quaternion.identity, stageGrid.transform);
                         break;
                     case "West":
-                        newFloorCoords.x = doorGameObject.transform.position.x - 4f;
-                        newFloorCoords.y = doorGameObject.transform.position.y;
+                        Vector3Int spawnPositionWest = doorGridPosition + new Vector3Int(-1, 0);
+                        Debug.Log("spawnPosition is on grid point: (" + spawnPositionWest.x + ", " + spawnPositionWest.y + ")");
+
+                        Vector3 spawnWorldPositionWest = stageGrid.CellToWorld(spawnPositionWest) + gridOffset; 
+                        Debug.Log("spawnWorldPosition is on grid point: (" + spawnWorldPositionWest.x + ", " + spawnWorldPositionWest.y + ")");
+
+                        Instantiate(emptyFloorPrefab, spawnWorldPositionWest, Quaternion.identity, stageGrid.transform);
                         break;
 
                 }
             }
-
-            var newFloor = Instantiate(emptyFloorPrefab, emptyFloorPrefab.transform);
-            newFloor.transform.localPosition = newFloorCoords;
             //TODO: add tracking in currentSpawnedRoomCoordinates
         }
     }
