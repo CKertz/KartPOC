@@ -2414,6 +2414,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pf_floor_4Door
       objectReference: {fileID: 0}
+    - target: {fileID: 1849290612061602557, guid: e0488313f608a534b82a18514fb134eb, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1849290612061602559, guid: e0488313f608a534b82a18514fb134eb, type: 3}
       propertyPath: m_RootOrder
       value: 0
