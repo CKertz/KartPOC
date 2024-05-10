@@ -1951,6 +1951,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   emptyFloorPrefab: {fileID: 8050006422539520481, guid: ef9919174b71afb4ba72f62bbbe9c9ca, type: 3}
+  doorPrefab: {fileID: 8670593931814930565, guid: 48e54212f4736da43b65188c61afdf72, type: 3}
   stageGrid: {fileID: 1032831008}
 --- !u!114 &1839968579
 MonoBehaviour:

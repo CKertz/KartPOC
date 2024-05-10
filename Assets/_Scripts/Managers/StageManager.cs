@@ -25,6 +25,9 @@ public class StageManager : MonoBehaviour
     GameObject emptyFloorPrefab;
 
     [SerializeField]
+    GameObject doorPrefab;
+
+    [SerializeField]
     Grid stageGrid;
 
     public void GenerateNextRoomLayout(Component sender, object data)
@@ -82,8 +85,15 @@ public class StageManager : MonoBehaviour
         Vector3 spawnWorldPosition = stageGrid.CellToWorld(spawnPosition) + gridOffset;
         Debug.Log("spawnWorldPosition is on grid point: (" + spawnWorldPosition.x + ", " + spawnWorldPosition.y + ")");
 
-        Instantiate(emptyFloorPrefab, spawnWorldPosition, Quaternion.identity, stageGrid.transform);
+        var spawnedFloor = Instantiate(emptyFloorPrefab, spawnWorldPosition, Quaternion.identity, stageGrid.transform);
         currentSpawnedRoomCoordinates.Add((spawnPosition.x, spawnPosition.y));
+        GenerateNextRoomDoors(spawnedFloor);
+    }
+
+    private void GenerateNextRoomDoors(GameObject spawnedFloor)
+    {
+        // need to generate at minimum one door that is on opposite side of desired direction (to 'connect' them)
+        Instantiate(doorPrefab, spawnedFloor.transform.position + new  Vector3(0, -2.15f), Quaternion.identity, spawnedFloor.transform);
     }
 
 }
